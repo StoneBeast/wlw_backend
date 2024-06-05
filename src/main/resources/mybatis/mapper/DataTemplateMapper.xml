@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="at.along.com.dao.DataTemplateMapper">
+    <resultMap id="BaseResultMap" type="at.along.com.entity.DataTemplate">
+        <id column="data_template_id" jdbcType="VARCHAR" property="dataTemplateId"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="data_name" jdbcType="VARCHAR" property="dataName"/>
+        <result column="unit_symbols" jdbcType="VARCHAR" property="unitSymbols"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+    </resultMap>
+    <insert id="insertAll">
+        insert into data_template value (#{dataTemplateId},#{productId},#{dataName},#{unitSymbols},#{unitName})
+    </insert>
+    <update id="updateByProductIdAnddeviceId">
+        update data_template set data_name=#{dataName},unit_symbols=#{unitSymbols},unit_name=#{unitName} where product_id=#{productId} and data_template_id=#{dataTemplateId}
+    </update>
+    <select id="selectByproduct" resultMap="BaseResultMap">
+        select `data_template_id`,`data_Name`,`unit_symbols`,`unit_name` from data_template where product_id=#{productId}
+    </select>
+    <select id="getcount" resultType="java.lang.Integer">
+        SELECT
+            Count(DISTINCT data_template_id)
+        FROM data_template where product_id=#{productId}
+    </select>
+
+    <select id="getDTid" resultType="string">
+        SELECT data_template_id from data_template where product_id=#{productID} and data_name=#{dataName}
+    </select>
+
+    <select id="queryByProductIdAndDataTemplateId" resultMap="BaseResultMap">
+        SELECT * from data_template where product_id=#{productId} and data_template_id=#{dataTemplateId}
+    </select>
+
+    <delete id="delete" parameterType="String">
+        delete from data_template where product_id=#{productId} and data_template_id=#{dataTemplateId}
+    </delete>
+
+    <select id="getDataTemplateId" resultMap="BaseResultMap">
+        SELECT data_template_id from data_template where product_id=#{productId}
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="at.along.com.dao.OptionsMapper">
+    <resultMap id="BaseResultMap" type="at.along.com.entity.Options">
+        <id column="type_code" jdbcType="INTEGER" property="type_code"/>
+        <result column="option_key" jdbcType="VARCHAR" property="option_key"/>
+    </resultMap>
+    <sql id="ListColumn" >
+        type_code,option_key
+    </sql>
+    <select id="selectAllByType_code" resultType="string">
+        select option_key from options where type_code=0
+    </select>
+    <select id="selectAllByType_code1" resultType="string">
+        select option_key from options where type_code=1
+    </select>
+    <select id="selectAllByType_code2" resultType="string">
+        select option_key from options where type_code=2
+    </select>
+
+
+</mapper>

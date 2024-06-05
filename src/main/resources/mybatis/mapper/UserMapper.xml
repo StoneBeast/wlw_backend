@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="at.along.com.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="at.along.com.entity.Users">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword"/>
+        <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
+        <result column="create_date" jdbcType="DATE" property="createDate"/>
+        <result column="update_date" jdbcType="DATE" property="updateDate"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        user_id,user_name,user_password,
+        user_email,create_date,update_date,avatar_url
+    </sql>
+    <insert id="insertAll" parameterType="at.along.com.entity.Users">
+    insert into `user`( user_id,user_name,user_password,
+                        user_email, create_date) value (#{userId},#{userName},#{userPassword},
+        #{userEmail}, #{createDate})
+    </insert>
+    <delete id="deleteByUserId" parameterType="string">
+        delete from `user` where user_id=#{userId}
+    </delete>
+
+    <select id="Query" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from `user`
+    </select>
+    <select id="selectByEmailAndPassword"  parameterType="string" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from `user` where user_email=#{email} and user_password=#{password}
+    </select>
+    <select id="selectByUserName" parameterType="string" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from `user` where user_name=#{username}
+    </select>
+    <select id="selectOneByUserEmail" parameterType="string" resultMap="BaseResultMap">
+        select * from user where user_email=#{email}
+    </select>
+    <select id="selectOneByUserId"  parameterType="string" resultMap="BaseResultMap">
+        select * from user where user_id=#{userId}
+    </select>
+
+</mapper>

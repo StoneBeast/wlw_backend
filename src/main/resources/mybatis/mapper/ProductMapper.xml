@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="at.along.com.dao.ProductMapper">
+    <resultMap id="BaseResultMap" type="at.along.com.entity.Product">
+        <id column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="product_industry" jdbcType="VARCHAR" property="productIndustry"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+        <result column="product_about" jdbcType="VARCHAR" property="productAbout"/>
+        <result column="access_networks" jdbcType="VARCHAR" property="accessNetworks"/>
+        <result column="access_agreement" jdbcType="VARCHAR" property="accessAgreement"/>
+        <result column="create_date" jdbcType="DATE" property="createDate"/>
+        <result column="update_date" jdbcType="DATE" property="updateDate"/>
+    </resultMap>
+    <sql id="Base_column_list">
+        product_id,product_name,user_id,
+        product_industry,product_type,product_about,access_networks,access_agreement,
+        create_date,update_date
+    </sql>
+    <insert id="insertOne" parameterType="at.along.com.entity.Product">
+        insert into product(product_id,product_name,user_id,product_industry,product_type,product_about,access_networks,access_agreement)
+            value (#{productId},#{productName},#{userId},#{productIndustry},#{productType},#{productAbout},#{accessNetworks},#{accessAgreement})
+    </insert>
+    <update id="updateById" parameterType="at.along.com.entity.Product">
+        update product set product_name=#{productName},user_id=#{userId},product_type=#{productType},product_about=#{productAbout},access_networks=#{accessNetworks},
+                           product_industry=#{productIndustry},
+                           update_date=#{updateDate} where product_id=#{productId}
+    </update>
+    <delete id="delByProductIdInt" parameterType="string">
+        delete from product where product_id=#{productId} and user_id=#{userId}
+    </delete>
+    <delete id="deleteByUserId" parameterType="string">
+        delete from product where user_id=#{userId}
+    </delete>
+    <select id="query" resultMap="BaseResultMap">
+        select *
+        from product;
+    </select>
+
+    <select id="queryId" parameterType="string" resultMap="BaseResultMap">
+        select * from product where product_id=#{id} and user_id=#{userId};
+    </select>
+
+
+    <select id="findAllByPage" parameterType="string" resultMap="BaseResultMap">
+        select * from product where user_id=#{userId} order by create_date desc
+    </select>
+
+    <select id="getCount" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from product where user_id=#{userId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="at.along.com.dao.UploadDataMapper">
+    <resultMap id="BaseResultMap" type="at.along.com.entity.UploadData">
+        <id column="message_id" jdbcType="INTEGER" property="messageId"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="upload_date" jdbcType="TIMESTAMP" property="uploadDate"/>
+        <result column="data" jdbcType="VARCHAR" property="data"/>
+        <result column="data_template_id" jdbcType="VARCHAR" property="dataTemplateId"/>
+    </resultMap>
+    <delete id="deleteByDeviceIdInt" parameterType="string">
+        delete from `device` where device_id=#{deviceId}
+    </delete>
+    <select id="selectByDateAndProductId"  resultType="java.lang.Integer">
+        select count(*)
+        from upload_data WHERE TO_DAYS(#{date})=TO_DAYS(upload_date) and product_id=#{productId}
+    </select>
+    <select id="selectByStartAndEndAndProductId" resultType="java.lang.Integer">
+        SELECT count(*) FROM (select * from `upload_data` where upload_date between #{start} and #{end}) as dd WHERE product_id=#{productId}
+    </select>
+    <select id="selectAllByProductId" parameterType="string" resultType="java.lang.Integer">
+        select count(*)
+        from (select * from upload_data where upload_date between #{start} and #{end}) as dd where product_id=#{productId}
+    </select>
+    <select id="getAllByData" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from upload_data where product_id=#{productId} and device_id=#{deviceId}
+    </select>
+    <select id="getyesterdaydate" resultType="java.lang.String">
+        select `data` from (SELECT * FROM upload_data WHERE device_id=#{deviceId} and product_id=#{productId}) as dd where date(upload_date) = date_sub(curdate(),interval 1 day);
+    </select>
+    <select id="getWeekdate" resultType="integer">
+        SELECT count(*) FROM (SELECT * FROM upload_data WHERE product_id=#{productId} and device_id=#{deviceId}) as dd where  date(`upload_date`) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    </select>
+    <select id="selectByDataTemplateIdUploadData" resultMap="BaseResultMap">
+       select * from (select * from upload_data where upload_date between #{start} and #{end}) as dd where data_template_id=#{dataTemplateId} and device_id=#{deviceId}
+    </select>
+    <select id="selectAllByDataTemplateIdAndDeviceId" resultMap="BaseResultMap">
+        select * from upload_data where data_template_id=#{dataTemplateId} and device_id=#{deviceId}
+    </select>
+    <select id="selectData" resultMap="BaseResultMap">
+        select * from (select * from upload_data where upload_date between #{start} and #{end}) as dd where product_id=#{productId}
+    </select>
+    <select id="selectDataOrderByDataTemplateIdAndDeviceId" resultMap="BaseResultMap">
+        SELECT * FROM (SELECT * FROM upload_data where device_id=#{deviceId} and data_template_id=#{dataTemplateId} ORDER BY upload_date DESC) as dd LIMIT 0,1
+    </select>
+    <insert id="insertAll">
+        insert into `upload_data`(product_id,device_id,`data`,data_template_id) value (#{productId},#{deviceId},#{data},#{dataTemplateId})
+    </insert>
+
+    <select id="fetchNewData" resultMap="BaseResultMap">
+        SELECT * from upload_data where device_id=#{deviceId} and data_template_id=#{dataTemplateId} ORDER BY upload_date DESC LIMIT #{count}
+    </select>
+    <select id="selectByDateData" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT device_id) from (SELECT * FROM upload_data WHERE to_days(`upload_date`) = to_days(now())) as dd where #{productId}=product_id;
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select COUNT(*) from upload_data where data_template_id=#{dataTemplateId} and device_id=#{deviceId}
+    </select>
+
+</mapper>
